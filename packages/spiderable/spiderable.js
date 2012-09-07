@@ -8,7 +8,7 @@
   var REQUEST_TIMEOUT = 15*1000;
 
   app.use(function (req, res, next) {
-    if (/\?.*_escaped_fragment_=/.test(req.url)) {
+    if (/\?.*_escaped_fragment_=/.test(req.url) || req.headers['user-agent'].indexOf('facebookexternalhit') !== -1) {
       // get escaped fragment out of the url.
       var idx = req.url.indexOf('?');
       var preQuery = req.url.substr(0, idx);
