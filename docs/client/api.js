@@ -65,7 +65,7 @@ Template.api.publish = {
      descr: "Name of the attribute set.  If `null`, the set has no name, and the record set is automatically sent to all connected clients."},
     {name: "func",
      type: "Function",
-     descr: "Function called on the server each time a client subscribes.  Inside function, `this` is the publish handler object, described below.  If the client passed arguments to `subscribe`, the function is called with the same arguments."}
+     descr: "Function called on the server each time a client subscribes.  Inside the function, `this` is the publish handler object, described below.  If the client passed arguments to `subscribe`, the function is called with the same arguments."}
   ]
 };
 
@@ -73,7 +73,7 @@ Template.api.subscription_set = {
   id: "publish_set",
   name: "<i>this</i>.set(collection, id, attributes)",
   locus: "Server",
-  descr: ["Call inside publish function.  Queues a command to set attributes."],
+  descr: ["Call inside the publish function.  Queues a command to set attributes."],
   args: [
     {name: "collection",
      type: "String",
@@ -94,7 +94,7 @@ Template.api.subscription_unset = {
   id: "publish_unset",
   name: "<i>this</i>.unset(collection, id, keys)",
   locus: "Server",
-  descr: ["Call inside publish function.  Queues a command to unset attributes."],
+  descr: ["Call inside the publish function.  Queues a command to unset attributes."],
   args: [
     {name: "collection",
      type: "String",
@@ -115,28 +115,28 @@ Template.api.subscription_complete = {
   id: "publish_complete",
   name: "<i>this</i>.complete()",
   locus: "Server",
-  descr: ["Call inside publish function.  Queues a command to mark this subscription as complete (initial attributes are set)."]
+  descr: ["Call inside the publish function.  Queues a command to mark this subscription as complete (initial attributes are set)."]
 };
 
 Template.api.subscription_flush = {
   id: "publish_flush",
   name: "<i>this</i>.flush()",
   locus: "Server",
-  descr: ["Call inside publish function.  Sends all the pending set, unset, and complete messages to the client."]
+  descr: ["Call inside the publish function.  Sends all the pending set, unset, and complete messages to the client."]
 };
 
 Template.api.subscription_stop = {
   id: "publish_stop",
   name: "<i>this</i>.stop()",
   locus: "Server",
-  descr: ["Call inside publish function.  Stops this client's subscription."]
+  descr: ["Call inside the publish function.  Stops this client's subscription."]
 };
 
 Template.api.subscription_onStop = {
   id: "publish_onstop",
   name: "<i>this</i>.onStop(func)",
   locus: "Server",
-  descr: ["Call inside publish function.  Registers a callback function to run when the subscription is stopped."],
+  descr: ["Call inside the publish function.  Registers a callback function to run when the subscription is stopped."],
   args: [
     {name: "func",
      type: "Function",
@@ -149,7 +149,7 @@ Template.api.subscription_userId = {
   id: "publish_userId",
   name: "<i>this</i>.userId",
   locus: "Server",
-  descr: ["The id of logged-in user, or `null` if no user is logged in."]
+  descr: ["Access inside the publish function. The id of the logged-in user, or `null` if no user is logged in."]
 };
 
 
@@ -218,14 +218,14 @@ Template.api.method_invocation_unblock = {
   id: "method_unblock",
   name: "<i>this</i>.unblock()",
   locus: "Server",
-  descr: ["Call inside method invocation.  Allow subsequent method from this client to begin running in a new fiber."]
+  descr: ["Call inside a method invocation.  Allow subsequent method from this client to begin running in a new fiber."]
 };
 
 Template.api.method_invocation_isSimulation = {
   id: "method_issimulation",
   name: "<i>this</i>.isSimulation",
   locus: "Anywhere",
-  descr: ["Access inside method invocation.  Boolean value, true if this invocation is a stub."]
+  descr: ["Access inside a method invocation.  Boolean value, true if this invocation is a stub."]
 };
 
 Template.api.error = {
@@ -236,7 +236,7 @@ Template.api.error = {
   args: [
     {name: "error",
      type: "Number",
-     descr: "A numeric error code, likely similar to a HTTP code (eg, 404, 500)."},
+     descr: "A numeric error code, likely similar to an HTTP code (eg, 404, 500)."},
     {name: "reason",
      type: "String",
      descr: "Optional.  A short human-readable summary of the error, like 'Not Found'."},
@@ -355,7 +355,7 @@ Template.api.find = {
      descr: "Sort order (default: natural order)"},
     {name: "skip",
      type: "Number",
-     descr: "Number of result to skip at the beginning"},
+     descr: "Number of results to skip at the beginning"},
     {name: "limit",
      type: "Number",
      descr: "Maximum number of results to return"},
@@ -365,7 +365,7 @@ Template.api.find = {
      descr: "Dictionary of fields to return or exclude."},
     {name: "reactive",
      type: "Boolean",
-     descr: "Default true; pass false to disable reactivity"}
+     descr: "Default `true`; pass `false` to disable reactivity"}
   ]
 };
 
@@ -387,7 +387,7 @@ Template.api.findone = {
      descr: "Sort order (default: natural order)"},
     {name: "skip",
      type: "Number",
-     descr: "Number of result to skip at the beginning"},
+     descr: "Number of results to skip at the beginning"},
     {name: "fields",
      type: "Object: field specifier",
      type_link: "fieldspecifiers",
@@ -538,9 +538,17 @@ Template.api.cursor_observe = {
   descr: ["Watch a query.  Receive callbacks as the result set changes."],
   args: [
     {name: "callbacks",
-     type: "Object (may include added, changed, moved, removed callbacks)",
+     type: "Object (may include <code>added</code>, <code>changed</code>, <code>moved</code>, and <code>removed</code> callbacks)",
      descr: "Functions to call to deliver the result set as it changes"}
   ]
+};
+
+Template.api.uuid = {
+  id: "meteor_uuid",
+  name: "Meteor.uuid()",
+  locus: "Anywhere",
+  descr: ["Returns a Universally Unique Identifier."],
+  args: [ ]
 };
 
 Template.api.selectors = {
@@ -590,7 +598,7 @@ Template.api.onInvalidate = {
   args: [
     {name: "callback",
      type: "Function",
-     descr: "Function to be called on invalidation. Receives one argument, the context that was invalidated"}
+     descr: "Function to be called on invalidation. Receives one argument, the context that was invalidated."}
   ]
 };
 
@@ -624,7 +632,7 @@ Template.api.flush = {
   id: "meteor_flush",
   name: "Meteor.flush()",
   locus: "Client",
-  descr: ["Ensure that any reactive updates have finished. Allow auto-updating DOM element to be cleaned up if they are offscreen."]
+  descr: ["Ensure that any reactive updates have finished. Allow auto-updating DOM elements to be cleaned up if they are offscreen."]
 };
 
 
@@ -687,6 +695,12 @@ Template.api.user = {
   descr: ["Get the current user record, or `null` if no user is logged in. A reactive data source."]
 };
 
+Template.api.currentUser = {
+  id: "meteor_currentuser",
+  name: "{{currentUser}}",
+  locus: "Handlebars templates",
+  descr: ["Calls [Meteor.user()](#meteor_user). Use `{{#if currentUser}}` to check whether the user is logged in."]
+};
 
 Template.api.userId = {
   id: "meteor_userid",
@@ -708,6 +722,13 @@ Template.api.userLoaded = {
   name: "Meteor.userLoaded()",
   locus: "Client",
   descr: ["Determine if the current user document is fully loaded in [`Meteor.users`](#meteor_users). A reactive data source."]
+};
+
+Template.api.currentUserLoaded = {
+  id: "meteor_currentuserloaded",
+  name: "{{currentUserLoaded}}",
+  locus: "Handlebars templates",
+  descr: ["Calls [Meteor.userLoaded()](#meteor_userloaded)."]
 };
 
 
@@ -789,7 +810,7 @@ Template.api.accounts_config = {
     {
       name: "forbidClientAccountCreation",
       type: "Boolean",
-      descr: "[`createUser`](#accounts_createuser) requests from the client will be rejected."
+      descr: "Calls to [`createUser`](#accounts_createuser) from the client will be rejected. In addition, if you are using [accounts-ui](#accountsui), the \"Create account\" link will not be available."
     }
   ]
 };
@@ -1057,7 +1078,7 @@ Template.api.accounts_emailTemplates = {
 
 Template.api.setTimeout = {
   id: "meteor_settimeout",
-  name: "Meteor.setTimeout",
+  name: "Meteor.setTimeout(func, delay)",
   locus: "Anywhere",
   descr: ["Call a function in the future after waiting for a specified delay."],
   args: [
@@ -1076,7 +1097,7 @@ Template.api.setTimeout = {
 
 Template.api.setInterval = {
   id: "meteor_setinterval",
-  name: "Meteor.setInterval",
+  name: "Meteor.setInterval(func, delay)",
   locus: "Anywhere",
   descr: ["Call a function repeatedly, with a time delay between calls."],
   args: [
@@ -1095,28 +1116,28 @@ Template.api.setInterval = {
 
 Template.api.clearTimeout = {
   id: "meteor_cleartimeout",
-  name: "Meteor.clearTimeout",
+  name: "Meteor.clearTimeout(id)",
   locus: "Anywhere",
   descr: ["Cancel a function call scheduled by `Meteor.setTimeout`."],
   args: [
     {
       name: "id",
       type: "Number",
-      descr: "The handle returned from setTimeout"
+      descr: "The handle returned by `Meteor.setTimeout`"
     }
   ]
 };
 
 Template.api.clearInterval = {
   id: "meteor_clearinterval",
-  name: "Meteor.clearInterval",
+  name: "Meteor.clearInterval(id)",
   locus: "Anywhere",
   descr: ["Cancel a repeating function call scheduled by `Meteor.setInterval`."],
   args: [
     {
       name: "id",
       type: "Number",
-      descr: "The handle returned from setInterval"
+      descr: "The handle returned by `Meteor.setInterval`"
     }
   ]
 };
@@ -1282,7 +1303,7 @@ Template.api.http_del = {
   id: "meteor_http_del",
   name: "Meteor.http.del(url, [options], [asyncCallback])",
   locus: "Anywhere",
-  descr: ["Send an HTTP DELETE request.  Equivalent to `Meteor.http.call(\"DELETE\", ...)`.  (Named `del` to avoid conflict with JavaScript's `delete`."]
+  descr: ["Send an HTTP DELETE request.  Equivalent to `Meteor.http.call(\"DELETE\", ...)`.  (Named `del` to avoid conflict with JavaScript's `delete`.)"]
 };
 
 
@@ -1353,7 +1374,7 @@ Template.api.template_preserve = {
   args: [
     {name: "selectors",
      type: "Array or Object",
-     descr: "Array of selectors that each match at most one element, such as `['.thing1', '.thing2']`, or, alternatively, a dictionary of selectors and node-labeling functions (see below)."}
+     descr: "Array of CSS selectors that each match at most one element, such as `['.thing1', '.thing2']`, or, alternatively, a dictionary of selectors and node-labeling functions (see below)."}
   ]
 };
 
