@@ -1,8 +1,14 @@
 (function () {
 
   Accounts.oauth.registerService('facebook', 2, function(query) {
+    var accessToken;
+    if (query["access_token"]) {
+      accessToken = query["access_token"];
+    }
+    else {
+      accessToken = getAccessToken(query);   
+    }
 
-    var accessToken = getAccessToken(query);
     var identity = getIdentity(accessToken);
 
     return {
