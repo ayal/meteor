@@ -11,6 +11,7 @@
       // Run service-specific handler.
       var oauthResult = service.handleOauthRequest(query);
 
+      console.log('state is: ', query.state);
       // Get or create user doc and login token for reconnect.
       Accounts.oauth._loginResultForState[query.state] =
         Accounts.updateOrCreateUserFromExternalService(

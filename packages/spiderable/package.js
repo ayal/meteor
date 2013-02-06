@@ -7,4 +7,5 @@ Package.on_use(function (api) {
 
   api.add_files('spiderable.html', 'client');
   api.add_files('spiderable.js', 'server');
+
 });

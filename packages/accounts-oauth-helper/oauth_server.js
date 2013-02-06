@@ -48,6 +48,7 @@
     if (!options.oauth)
       return undefined; // don't handle
 
+    console.log('registerLoginHandler. state >>', options.oauth.state);
     var result = Accounts.oauth._loginResultForState[options.oauth.state];
     if (result === undefined) // not using `!result` since can be null
       // We weren't notified of the user authorizing the login.
@@ -159,7 +160,8 @@
     // just serve a blank page
     if ('close' in query) { // check with 'in' because we don't set a value
       closePopup(res);
-    } else if (query.redirect) {
+    }
+    else if (query.redirect) {
       res.writeHead(302, {'Location': query.redirect});
       res.end();
     } else {
@@ -171,10 +173,10 @@
   var closePopup = function(res) {
     res.writeHead(200, {'Content-Type': 'text/html'});
     var content =
-          '<html><head><script>window.close()</script></head></html>';
+          '<html><head><script>window.close();</script></head></html>';
     res.end(content, 'utf-8');
   };
-
 })();
+
 
 
